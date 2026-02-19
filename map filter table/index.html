@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eligible Candidates Voting List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        header {
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 20px auto;
+        }
+
+        .search-section {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .search-section input {
+            padding: 8px;
+            margin-right: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 200px;
+        }
+
+        .search-section button {
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .search-section button:hover {
+            background-color: #45a049;
+        }
+
+        .result {
+            margin: 20px 0;
+            font-size: 18px;
+            color: #333;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            margin: 20px 0;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        @media (max-width: 768px) {
+            .search-section {
+                display: block;
+            }
+
+            .search-section input {
+                width: 100%;
+                margin: 10px 0;
+            }
+
+            table, th, td {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Eligible Candidates Voting List</h1>
+    </header>
+
+    <div class="container">
+        <div class="search-section">
+            <input type="text" id="searchName" placeholder="Search by Name" oninput="filterEligibleCandidates()" />
+            <input type="number" id="searchAge" placeholder="Enter age" oninput="filterEligibleCandidates()" />
+
+        <div class="result" id="result"></div>
+
+        <table id="candidateTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>City</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const candidates = [
+            { name: "Meena", age: 19, city: "Bangalore" },
+            { name: "Atchaya", age: 20, city: "Chennai" },
+            { name: "Durga", age: 21, city: "Coimbatore" },
+            { name: "Maha", age: 23, city: "Madurai" },
+            { name: "Nithish", age: 24, city: "Chennai" },
+            { name: "Lalitha", age: 25, city: "Coimbatore" },
+            { name: "Yazhini", age: 24, city: "Chennai" },
+            { name: "Abi", age: 23, city: "Coimbatore" },
+            { name: "Jeni", age: 22, city: "Madurai" },
+            { name: "Ramesh", age: 21, city: "Chennai" },
+            { name: "Sneha", age: 22, city: "Coimbatore" },
+            { name: "Karthik", age: 18, city: "Madurai" },
+            { name: "Nithish", age: 23, city: "Chennai" },
+            { name: "Meena", age: 18, city: "Bangalore" },
+            { name: "Atchaya", age: 21, city: "Chennai" },
+            { name: "Durga", age: 25, city: "Coimbatore" },
+            { name: "Maha", age: 23, city: "Madurai" },
+            { name: "Renu", age: 21, city: "Chennai" },
+            { name: "Lalitha", age: 22, city: "Coimbatore" },
+            { name: "Deepika", age: 18, city: "Madurai" },
+            { name: "Deepa", age: 18, city: "Chennai" },
+            { name: "Boomi", age: 18, city: "Coimbatore" },
+            { name: "Nithu", age: 24, city: "Madurai" },
+        ];
+
+
+        function filterEligibleCandidates() {
+            const nameInput = document.getElementById('searchName').value.trim().toLowerCase();
+            const ageInput = document.getElementById('searchAge').value.trim();
+
+
+            const eligibleCandidates = candidates.filter(candidate => {
+                const nameMatch = candidate.name.toLowerCase().includes(nameInput);
+                const ageMatch = ageInput ? candidate.age == parseInt(ageInput) : true;
+                return nameMatch && ageMatch;
+            });
+
+            const countEligible = eligibleCandidates.length;
+
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = `Total Eligible Candidates: ${countEligible}`;
+
+            const tableBody = document.getElementById('candidateTable').getElementsByTagName('tbody')[0];
+            tableBody.innerHTML = ''; 
+
+            if (eligibleCandidates.length === 0) {
+                const row = tableBody.insertRow();
+                const cell = row.insertCell(0);
+                cell.colSpan = 3;
+                cell.textContent = 'No candidates found matching your criteria.';
+                cell.style.textAlign = 'center';
+            }
+
+            eligibleCandidates.forEach(candidate => {
+                const row = tableBody.insertRow();
+                const cellName = row.insertCell(0);
+                const cellAge = row.insertCell(1);
+                const cellCity = row.insertCell(2);
+
+                cellName.textContent = candidate.name;
+                cellAge.textContent = candidate.age;
+                cellCity.textContent = candidate.city;
+            });
+        }
+
+        window.onload = filterEligibleCandidates;
+    </script>
+</body>
+</html>
